@@ -97,7 +97,7 @@
 
 ## [나무 높이](https://swexpertacademy.com/main/code/userProblem/userProblemDetail.do?contestProbId=AYFofW8qpXYDFAR4&categoryId=AYFofW8qpXYDFAR4&categoryType=CODE)
 
-### [민웅](./나무 높이/민웅.py)
+### [민웅](./나무%20높이/민웅.py)
 
 ```py
 # SW_나무높이
@@ -144,18 +144,18 @@ for tc in range(1, T+1):
 
 ```
 
-### [상미](./나무 높이/상미.py)
+### [상미](./나무%20높이/상미.py)
 
 ```py
 
 ```
 
-### [성구](./나무 높이/성구.py)
+### [성구](./나무%20높이/성구.py)
 
 ```py
 ```
 
-### [영준](./나무 높이/영준.py)
+### [영준](./나무%20높이/영준.py)
 
 ```py
 
