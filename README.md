@@ -16,7 +16,35 @@
 ### [민웅](./트럭/민웅.py)
 
 ```py
+# 13335_트럭_Truck
+import sys
+from collections import deque
+input = sys.stdin.readline
 
+N, W, L = map(int, input().split())
+trucks = deque(list(map(int, input().split())))
+
+bridge = deque()
+
+time = 0
+total = 0
+
+while True:
+    if not bridge and not trucks:
+        break
+    time += 1
+    if bridge:
+        out_w, t = bridge[0]
+        if time - W == t:
+            bridge.popleft()
+            total -= out_w
+    if trucks:
+        tmp = trucks[0]
+        if total + tmp <= L:
+            bridge.append([trucks.popleft(), time])
+            total += tmp
+
+print(time)
 ```
 
 ### [상미](./트럭/상미.py)
@@ -42,6 +70,48 @@
 ### [민웅](./컬러볼/민웅.py)
 
 ```py
+# 10800_컬러볼_colorball
+import sys
+# import heapq
+input = sys.stdin.readline
+
+N = int(input())
+
+balls = []
+ans = [0]*(N+1)
+colors = {}
+prefix = [0]
+for i in range(N):
+    c, s = map(int, input().split())
+    balls.append([s, c, i+1])
+
+balls.sort()
+for i in range(N):
+    s, c, idx = balls[i]
+    if i < N-1 and balls[i][0] == balls[i+1][0]:
+        continue
+
+    sum_size = 0
+    for j in range(i, -1, -1):
+        if balls[j][0] != s:
+            break
+        sum_size += s
+        if balls[j][1] in colors.keys():
+            ans[balls[j][2]] = prefix[-1] - colors[balls[j][1]]
+        else:
+            colors[balls[j][1]] = 0
+            ans[balls[j][2]] = prefix[-1]
+
+    for k in range(i, -1, -1):
+        if balls[k][0] != s:
+            break
+        colors[balls[k][1]] += s
+
+    prefix.append(prefix[-1] + sum_size)
+
+
+for i in range(1, N+1):
+    print(ans[i])
 
 ```
 
@@ -69,6 +139,78 @@
 ### [민웅](./미친%20아두이노/민웅.py)
 
 ```py
+# 8972_미친아두이노_crazy arduino
+import sys
+input = sys.stdin.readline
+dxy = [(0, 0), (1, -1), (1, 0), (1, 1), (0, -1), (0, 0), (0, 1), (-1, -1), (-1, 0), (-1, 1)]
+
+R, C = map(int, input().split())
+
+field = [list(input().strip()) for _ in range(R)]
+player = []
+ardu = set()
+for i in range(R):
+    for j in range(C):
+        if field[i][j] == 'I':
+            player = [i, j]
+        elif field[i][j] == 'R':
+            ardu.add((i, j))
+
+moves = list(map(int, input().strip()))
+cnt = 0
+is_end = False
+for m in moves:
+    cnt += 1
+    nx = player[0] + dxy[m][0]
+    ny = player[1] + dxy[m][1]
+    player = [nx, ny]
+
+    a_tmp = set()
+    # 추가
+    a_remove = set()
+    for a in ardu:
+        tmp_x = nx - a[0]
+        if tmp_x < 0:
+            ax = -1
+        elif tmp_x > 0:
+            ax = 1
+        else:
+            ax = 0
+        tmp_y = ny - a[1]
+        if tmp_y < 0:
+            ay = -1
+        elif tmp_y > 0:
+            ay = 1
+        else:
+            ay = 0
+        ax = a[0] + ax
+        ay = a[1] + ay
+        if ax == nx and ay == ny:
+            is_end = True
+            break
+        if (ax, ay) in a_tmp:
+            a_remove.add((ax, ay))
+        else:
+            a_tmp.add((ax, ay))
+    # 추가
+    for x, y in a_remove:
+        a_tmp.remove((x, y))
+    if is_end:
+        break
+
+    ardu = a_tmp
+
+if is_end:
+    print(f"kraj {cnt}")
+else:
+    ans = [['.']*C for _ in range(R)]
+    for a in ardu:
+        ans[a[0]][a[1]] = "R"
+
+    ans[player[0]][player[1]] = "I"
+
+    for line in ans:
+        print(*line, sep="")
 ```
 
 ### [상미](./미친%20아두이노/상미.py)
