@@ -143,7 +143,30 @@ if __name__ == "__main__":
 ### [영준](./트럭/영준.py)
 
 ```py
-
+N, W, L = map(int, input().split()) # N다리를 건너는 트럭의 수, W다리의 길이, L다리의 최대하중
+truck = list(map(int, input().split()))
+qsize = W+1
+front = rear = 0
+q = [0]*qsize   # 순환큐
+t = 0           # 다리를 건너는 총 시간
+i = 0
+while i < N:      # 트럭 i
+    if (rear+1)%qsize == front: # 다리가 꽉 차면
+        front = (front+1)%qsize     # 디큐, 가장 앞 트럭 통과
+        q[front] = 0                # 무게 합산을 위해
+    t += 1                      # 단위시간 추가
+    rear = (rear + 1) % qsize
+    if i<N and sum(q)+truck[i]<=L:      # 무게가 초과하지 않으면 다음 트럭 진입
+        q[rear] = truck[i]
+        i += 1
+    else:
+        q[rear] = 0             # 무게가 초과하면 추가 없이 한 칸 진행
+if N<W:
+    rear = (rear+W-N) % qsize   # 다리가 더 길면 0 추가
+while front!=rear:      # 다리위에 트럭이 남아 있으면 모두 통과시킴
+    front = (front+1)%qsize
+    t += 1
+print(t)
 ```
 
 <br/>
