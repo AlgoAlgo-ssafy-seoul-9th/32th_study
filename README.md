@@ -50,6 +50,30 @@ print(time)
 ### [상미](./트럭/상미.py)
 
 ```py
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, w, L = map(int, input().split())
+trains = list(map(int, input().split()))
+bridge = deque()                # 현재 다리 위
+tmp = trains[0]                     # 현재 다리 위 무게
+i = 1                       # 기차 인덱스
+time = 1
+bridge.append([trains[0], w])
+while i < n:
+    for b in range(len(bridge)):
+            bridge[b][1] -= 1
+    if bridge[0][1] == 0:
+        tmp -= bridge[0][0]
+        bridge.popleft()
+    if tmp + trains[i] <= L:             # 다음 기차 올라갈 수 있으면
+        tmp += trains[i]            # 이번 기차 무게 올라가고
+        bridge.append([trains[i], w])   # [무게, 남은 길이] 추가
+        i += 1
+
+    time += 1
+print(time+w)
 
 ```
 
@@ -66,10 +90,10 @@ def main():
     trucks = tuple(map(int, input().split()))
 
     bridge = [-1] * w
-    
+
     weight = 0
     t = 0
-    
+
     truck_idx = 0
     while truck_idx < n :
         # 다리 위에 트럭이 있을 때에만 트럭 무빙(처음 1번은 움직일 필요없음)
@@ -83,7 +107,7 @@ def main():
                 bridge[i] = bridge[i+1]
             # 마지막 비워주기
             bridge[-1] = -1
-        
+
         # 무게 하중을 다리가 버틸 수 있으면 트럭 올리기
         if weight + trucks[truck_idx] <= l:
             bridge[-1] = truck_idx
@@ -91,7 +115,7 @@ def main():
             weight += trucks[truck_idx]
             # 다음 인덱스 탐색
             truck_idx += 1
-    
+
         t += 1  # 시간 증가
 
         # 디버깅
@@ -106,7 +130,7 @@ def main():
         if bridge[i] >= 0:
             additional = i
             break
-    
+
     print(t + additional+1)
 
     return
@@ -119,6 +143,7 @@ if __name__ == "__main__":
 ### [영준](./트럭/영준.py)
 
 ```py
+
 ```
 
 <br/>
@@ -188,6 +213,7 @@ for i in range(1, N+1):
 ### [영준](./컬러볼/영준.py)
 
 ```py
+
 ```
 
 <br/>
@@ -280,6 +306,7 @@ else:
 ### [성구](./미친%20아두이노/성구.py)
 
 ```py
+
 ```
 
 ### [영준](./미친%20아두이노/영준.py)
@@ -374,6 +401,7 @@ for tc in range(1, T+1):
 ### [성구](./나무%20높이/성구.py)
 
 ```py
+
 ```
 
 ### [영준](./나무%20높이/영준.py)
@@ -382,9 +410,6 @@ for tc in range(1, T+1):
 
 ```
 
- 
-
 </details>
 
 <br/><br/>
-
