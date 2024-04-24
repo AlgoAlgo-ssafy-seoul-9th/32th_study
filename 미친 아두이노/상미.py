@@ -78,6 +78,7 @@ for m in move:
         if cx == jong[0] and cy == jong[1]:
             print("kraj", cnt)
             Gameover = True
+            break
     if Gameover:
         break
     sameArd(crazy)              # 같은 위치의 아두이노들 폭발
