@@ -15,6 +15,7 @@ def main():
         return abs(y1-y2) + abs(x1-x2)
 
     def move_robots(target_i, target_j):
+        tmp = [["."] * C for _ in range(R)]
         for idx in robots.keys():
             i, j = robots[idx]
             minv = 100001
@@ -30,28 +31,29 @@ def main():
                     minv = d
                     cand = (ni,nj)
             
-            if cand[0] == I[0] and cand[1] == I[1]:
+            if cand[0] == target_i and cand[1] == target_j:
                 return 1
             
-
+            
             field[i][j] = "."
-            if field[cand[0]][cand[1]] == "R":
-                robots[idx] = 0
+            if tmp[cand[0]][cand[1]] == "R":
                 boom.add(cand)
+                boom.add((i,j))
             else:
-                field[cand[0]][cand[1]] = "R" 
+                tmp[cand[0]][cand[1]] = "R" 
+                # field[cand[0]][cand[1]] = "R" 
                 robots[idx] = (cand[0], cand[1])
         return 0
     
     def boom_robot():
         robokey = list(robots.keys())
         for key in robokey:
-            if robots[key] == 0:
-                robots.pop(key)
-            elif robots[key] in boom:
+            if robots[key] in boom:
                 field[robots[key][0]][robots[key][1]] = "."
-        print(robots)
+                robots.pop(key)
         boom.clear()
+        for key in robots.keys():
+            field[robots[key][0]][robots[key][1]] = "R"
         return 
     
     def find():
@@ -61,7 +63,7 @@ def main():
                 if field[i][j] == "I":
                     I = [i,j]
                 elif field[i][j] == "R":
-                    robots[cnt] = [i,j]
+                    robots[cnt] = (i,j)
                     cnt += 1
         return I
 
@@ -76,7 +78,7 @@ def main():
             break
         field[I[0]][I[1]] = "."
         field[ni][nj] = "I"
-
+        I= [ni,nj]
         if move_robots(ni, nj):
             ans = cnt+1
             break
