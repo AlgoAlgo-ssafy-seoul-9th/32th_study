@@ -260,7 +260,22 @@ for i in range(N):
 ### [영준](./컬러볼/영준.py)
 
 ```py
+# 시간초과
+N = int(input())
+ball = [list(map(int, input().split()))+[i] for i in range(N)]
 
+ball.sort(key=lambda x:x[1])    # 크기순 정렬
+ans = [0]*N
+for i in range(1, N):
+    s = 0
+    for j in range(i):
+        if ball[j][1]==ball[i][1] or ball[j][0] == ball[i][0]:   # 크기가 같으면
+            continue
+        s += ball[j][1]
+    ans[ball[i][2]] = s
+
+for x in ans:
+    print(x)
 ```
 
 <br/>
@@ -452,7 +467,67 @@ if not Gameover:
 ### [영준](./미친%20아두이노/영준.py)
 
 ```py
+# 10% 시간초과과
+di = [0, 1, 1, 1, 0, 0, 0,-1,-1,-1]
+dj = [0,-1, 0, 1,-1, 0, 1,-1, 0, 1]
 
+R, C = map(int, input().split())
+bd = [list(input()) for _ in range(R)]
+mov = input()
+js = [0]*3
+arduino = []
+for i in range(R):
+    for j in range(C):
+        if bd[i][j] == 'I':
+            js[0], js[1] = i, j
+        if bd[i][j] == 'R':
+            arduino.append([i,j,0])
+check = [0]*len(arduino)    # 아두이노 폭파
+
+for x in mov:
+    x = int(x)
+    js[0], js[1] = js[0]+di[x], js[1]+dj[x]
+    js[2] += 1      # 이동 횟수
+    for p in range(len(arduino)):
+        if check[p]==0 and arduino[p][:2]==js[0]:
+            js[0] = -1
+            break
+    if js[0]==-1:
+        break
+
+    for p in range(len(arduino)):
+        if check[p]==0:
+            min_i = min_j = 0
+            min_v = 1000000
+            for k in range(1, 10):
+                if k!=5:
+                    ni, nj = arduino[p][0]+di[k], arduino[p][1]+dj[k]
+                    if 0<=ni<R and 0<=nj<C:
+                        tmp = abs(js[0]-ni)+abs(js[1]-nj)   # 종수와 거리
+                        if min_v > tmp:                     # 최소거리 위치 찾기
+                            min_i, min_j = ni, nj
+                            min_v = tmp
+            arduino[p][0], arduino[p][1], arduino[p][2] = min_i, min_j, js[2]
+            if arduino[p] == js:  # 종료
+                js[0] = -1
+                break   #for p
+            for q in range(p):
+                if arduino[p]==arduino[q]: # 폭파
+                    check[p] = check[q] = 1
+    else:
+        continue
+    break
+
+if js[0]==-1:   # 중간 종료
+    print(f'kraj {js[2]}')
+else:
+    ans = [['.']*C for _ in range(R)]
+    ans[js[0]][js[1]] = 'I'
+    for p in range(len(arduino)):
+        if check[p]==0:
+            ans[arduino[p][0]][arduino[p][1]] = 'R'
+    for x in ans:
+        print(''.join(x))
 ```
 
 <br/>
