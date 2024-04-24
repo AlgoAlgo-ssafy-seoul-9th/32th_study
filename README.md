@@ -50,6 +50,30 @@ print(time)
 ### [상미](./트럭/상미.py)
 
 ```py
+import sys
+input = sys.stdin.readline
+from collections import deque
+
+n, w, L = map(int, input().split())
+trains = list(map(int, input().split()))
+bridge = deque()                # 현재 다리 위
+tmp = trains[0]                     # 현재 다리 위 무게
+i = 1                       # 기차 인덱스
+time = 1
+bridge.append([trains[0], w])
+while i < n:
+    for b in range(len(bridge)):
+            bridge[b][1] -= 1
+    if bridge[0][1] == 0:
+        tmp -= bridge[0][0]
+        bridge.popleft()
+    if tmp + trains[i] <= L:             # 다음 기차 올라갈 수 있으면
+        tmp += trains[i]            # 이번 기차 무게 올라가고
+        bridge.append([trains[i], w])   # [무게, 남은 길이] 추가
+        i += 1
+
+    time += 1
+print(time+w)
 
 ```
 
@@ -66,10 +90,10 @@ def main():
     trucks = tuple(map(int, input().split()))
 
     bridge = [-1] * w
-    
+
     weight = 0
     t = 0
-    
+
     truck_idx = 0
     while truck_idx < n :
         # 다리 위에 트럭이 있을 때에만 트럭 무빙(처음 1번은 움직일 필요없음)
@@ -83,7 +107,7 @@ def main():
                 bridge[i] = bridge[i+1]
             # 마지막 비워주기
             bridge[-1] = -1
-        
+
         # 무게 하중을 다리가 버틸 수 있으면 트럭 올리기
         if weight + trucks[truck_idx] <= l:
             bridge[-1] = truck_idx
@@ -91,7 +115,7 @@ def main():
             weight += trucks[truck_idx]
             # 다음 인덱스 탐색
             truck_idx += 1
-    
+
         t += 1  # 시간 증가
 
         # 디버깅
@@ -106,7 +130,7 @@ def main():
         if bridge[i] >= 0:
             additional = i
             break
-    
+
     print(t + additional+1)
 
     return
@@ -119,6 +143,30 @@ if __name__ == "__main__":
 ### [영준](./트럭/영준.py)
 
 ```py
+N, W, L = map(int, input().split()) # N다리를 건너는 트럭의 수, W다리의 길이, L다리의 최대하중
+truck = list(map(int, input().split()))
+qsize = W+1
+front = rear = 0
+q = [0]*qsize   # 순환큐
+t = 0           # 다리를 건너는 총 시간
+i = 0
+while i < N:      # 트럭 i
+    if (rear+1)%qsize == front: # 다리가 꽉 차면
+        front = (front+1)%qsize     # 디큐, 가장 앞 트럭 통과
+        q[front] = 0                # 무게 합산을 위해
+    t += 1                      # 단위시간 추가
+    rear = (rear + 1) % qsize
+    if i<N and sum(q)+truck[i]<=L:      # 무게가 초과하지 않으면 다음 트럭 진입
+        q[rear] = truck[i]
+        i += 1
+    else:
+        q[rear] = 0             # 무게가 초과하면 추가 없이 한 칸 진행
+if N<W:
+    rear = (rear+W-N) % qsize   # 다리가 더 길면 0 추가
+while front!=rear:      # 다리위에 트럭이 남아 있으면 모두 통과시킴
+    front = (front+1)%qsize
+    t += 1
+print(t)
 ```
 
 <br/>
@@ -176,6 +224,30 @@ for i in range(1, N+1):
 ### [상미](./컬러볼/상미.py)
 
 ```py
+# 시간 초과
+
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+balls = {}
+ballNum = {}
+for i in range(N):          # 색깔, 크기
+    color, size = map(int, input().split())
+    balls[color] = balls.get(color, []) + [size]
+    ballNum[i+1] = [color, size]
+# print(balls)
+# print(ballNum)
+for i in range(N):
+    tmp = 0
+    color = ballNum[i+1][0]
+    size = ballNum[i+1][1]
+    for key, value in balls.items():
+        if key != color:
+            for v in value:
+                if v < size:
+                    tmp += v
+    print(tmp)
 
 ```
 
@@ -188,6 +260,22 @@ for i in range(1, N+1):
 ### [영준](./컬러볼/영준.py)
 
 ```py
+# 시간초과
+N = int(input())
+ball = [list(map(int, input().split()))+[i] for i in range(N)]
+
+ball.sort(key=lambda x:x[1])    # 크기순 정렬
+ans = [0]*N
+for i in range(1, N):
+    s = 0
+    for j in range(i):
+        if ball[j][1]==ball[i][1] or ball[j][0] == ball[i][0]:   # 크기가 같으면
+            continue
+        s += ball[j][1]
+    ans[ball[i][2]] = s
+
+for x in ans:
+    print(x)
 ```
 
 <br/>
@@ -274,18 +362,172 @@ else:
 ### [상미](./미친%20아두이노/상미.py)
 
 ```py
+# 25% 틀렸습니다
+
+import sys
+input = sys.stdin.readline
+
+def jongsu(di):
+    global cnt
+    if di == 1:
+        jong[0] += 1
+        jong[1] -= 1
+    elif di == 2:
+        jong[0] += 1
+    elif di == 3:
+        jong[0] += 1
+        jong[1] += 1
+    elif di == 4:
+        jong[1] -= 1
+    elif di == 6:
+        jong[1] += 1
+    elif di == 7:
+        jong[0] -= 1
+        jong[1] -= 1
+    elif di == 8:
+        jong[0] -= 1
+    elif di == 9:
+        jong[0] -= 1
+        jong[1] += 1
+    cnt += 1
+
+def Arduino(tx, ty, crazy):
+    for i in range(len(crazy)):
+        if tx < crazy[i][0] and ty < crazy[i][1]:
+            crazy[i][0] -= 1
+            crazy[i][1] -= 1
+        elif tx == crazy[i][0] and ty < crazy[i][1]:
+            crazy[i][1] -= 1
+        elif tx > crazy[i][0] and ty < crazy[i][1]:
+            crazy[i][0] += 1
+            crazy[i][1] -= 1
+        elif tx > crazy[i][0] and ty == crazy[i][1]:
+            crazy[i][0] += 1
+        elif tx > crazy[i][0] and ty > crazy[i][1]:
+            crazy[i][0] += 1
+            crazy[i][1] += 1
+        elif tx == crazy[i][0] and ty > crazy[i][1]:
+            crazy[i][1] += 1
+        elif tx < crazy[i][0] and ty > crazy[i][1]:
+            crazy[i][0] -= 1
+            crazy[i][1] += 1
+        elif tx < crazy[i][0] and ty == crazy[i][1]:
+            crazy[i][0] -= 1
+
+def sameArd(crazy):
+    ADict = {}
+    for [cx, cy] in crazy:
+        ADict[(cx, cy)] = ADict.get((cx, cy), 0) + 1
+    for key, value in ADict.items():
+        if value > 1:
+            for _ in range(value):
+                crazy.remove([key[0], key[1]])
+
+R, C = map(int, input().split())
+arr = [list(input().strip()) for _ in range(R)]
+move = list(input().strip())
+jong = [0, 0]
+cnt = 0
+crazy = []
+Gameover = False
+for i in range(R):
+    for j in range(C):
+        if arr[i][j] == 'I':
+            jong = [i, j]
+        elif arr[i][j] == 'R':
+            crazy.append([i, j])
+for m in move:
+    jongsu(int(m))              # 종수 이동
+    Arduino(jong[0], jong[1], crazy)        # 아두이노들 이동
+
+    for cx, cy in crazy:                    # 아두이노와 종수 만나면 종료
+        if cx == jong[0] and cy == jong[1]:
+            print("kraj", cnt)
+            Gameover = True
+    if Gameover:
+        break
+    sameArd(crazy)              # 같은 위치의 아두이노들 폭발
+
+if not Gameover:
+    ans = [['.']* C for _ in range(R)]
+    for cx, cy in crazy:
+        ans[cx][cy] = 'R'
+    ans[jong[0]][jong[1]] = 'I'
+    for r in range(R):
+        print(''.join(ans[r]))
 
 ```
 
 ### [성구](./미친%20아두이노/성구.py)
 
 ```py
+
 ```
 
 ### [영준](./미친%20아두이노/영준.py)
 
 ```py
+# 10% 시간초과과
+di = [0, 1, 1, 1, 0, 0, 0,-1,-1,-1]
+dj = [0,-1, 0, 1,-1, 0, 1,-1, 0, 1]
 
+R, C = map(int, input().split())
+bd = [list(input()) for _ in range(R)]
+mov = input()
+js = [0]*3
+arduino = []
+for i in range(R):
+    for j in range(C):
+        if bd[i][j] == 'I':
+            js[0], js[1] = i, j
+        if bd[i][j] == 'R':
+            arduino.append([i,j,0])
+check = [0]*len(arduino)    # 아두이노 폭파
+
+for x in mov:
+    x = int(x)
+    js[0], js[1] = js[0]+di[x], js[1]+dj[x]
+    js[2] += 1      # 이동 횟수
+    for p in range(len(arduino)):
+        if check[p]==0 and arduino[p][:2]==js[0]:
+            js[0] = -1
+            break
+    if js[0]==-1:
+        break
+
+    for p in range(len(arduino)):
+        if check[p]==0:
+            min_i = min_j = 0
+            min_v = 1000000
+            for k in range(1, 10):
+                if k!=5:
+                    ni, nj = arduino[p][0]+di[k], arduino[p][1]+dj[k]
+                    if 0<=ni<R and 0<=nj<C:
+                        tmp = abs(js[0]-ni)+abs(js[1]-nj)   # 종수와 거리
+                        if min_v > tmp:                     # 최소거리 위치 찾기
+                            min_i, min_j = ni, nj
+                            min_v = tmp
+            arduino[p][0], arduino[p][1], arduino[p][2] = min_i, min_j, js[2]
+            if arduino[p] == js:  # 종료
+                js[0] = -1
+                break   #for p
+            for q in range(p):
+                if arduino[p]==arduino[q]: # 폭파
+                    check[p] = check[q] = 1
+    else:
+        continue
+    break
+
+if js[0]==-1:   # 중간 종료
+    print(f'kraj {js[2]}')
+else:
+    ans = [['.']*C for _ in range(R)]
+    ans[js[0]][js[1]] = 'I'
+    for p in range(len(arduino)):
+        if check[p]==0:
+            ans[arduino[p][0]][arduino[p][1]] = 'R'
+    for x in ans:
+        print(''.join(x))
 ```
 
 <br/>
@@ -374,6 +616,7 @@ for tc in range(1, T+1):
 ### [성구](./나무%20높이/성구.py)
 
 ```py
+
 ```
 
 ### [영준](./나무%20높이/영준.py)
@@ -382,9 +625,6 @@ for tc in range(1, T+1):
 
 ```
 
- 
-
 </details>
 
 <br/><br/>
-
