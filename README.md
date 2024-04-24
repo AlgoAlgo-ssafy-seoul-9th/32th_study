@@ -362,8 +362,6 @@ else:
 ### [상미](./미친%20아두이노/상미.py)
 
 ```py
-# 25% 틀렸습니다
-
 import sys
 input = sys.stdin.readline
 
@@ -444,6 +442,7 @@ for m in move:
         if cx == jong[0] and cy == jong[1]:
             print("kraj", cnt)
             Gameover = True
+            break
     if Gameover:
         break
     sameArd(crazy)              # 같은 위치의 아두이노들 폭발
@@ -455,6 +454,7 @@ if not Gameover:
     ans[jong[0]][jong[1]] = 'I'
     for r in range(R):
         print(''.join(ans[r]))
+
 
 ```
 

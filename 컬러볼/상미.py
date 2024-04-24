@@ -20,5 +20,3 @@ for i in range(N):
                 if v < size:
                     tmp += v
     print(tmp)
-            
-
