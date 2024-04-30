@@ -6,47 +6,37 @@ input = sys.stdin.readline
 
 def main():
     N = int(input())
-    colorball = []
-    colormax = 0
-    sequence = [0] * N
+    colorballs = []
     for i in range(N):
-        c, b = map(int, input().split())
-        colorball.append([i, c, b])
-        colormax = max(colormax, c)
+        colorballs.append((i, *map(int, input().split())))
     
-    colorball.sort(key=lambda x:(x[2], x[1]))
-    
-    color = [0] * (colormax+1)
-    balls = [0] * N
-    
-    color[colorball[0][1]] = colorball[0][2]
-    balls[0] = colorball[0][2]
-    pin = 0
-    same = 0
-    for i in range(1, N):
-        if colorball[i][2] != colorball[i-1][2]:
-            break
-        color[colorball[i][1]] = colorball[i][2]
-        same += colorball[i][2]
-        balls[i] = colorball[i][2]
-        pin = i
-    
-    for i in range(pin+1, N):
-        idx, c, b = colorball[i]
-        color[c] += b 
-        if b == colorball[i-1][2]:
-            balls[i] = balls[i-1]
-            same += b
+    colors = defaultdict(int)
+    prefix, same = 0, 0
+    same_color = defaultdict(int)
+    sequence = [0] * N
+    sort_colorballs =  sorted(colorballs, key=lambda x:(x[2], x[1]))
+    for i in range(N-1):
+        idx, c, ball = sort_colorballs[i]
+        _, _, post_ball = sort_colorballs[i+1]
+        if ball == post_ball:
+            sequence[idx] = prefix - colors[c]
+            same_color[c] += 1
+            same = ball
         else:
-            balls[i] = balls[i-1] + b + same
-            same = 0
-        if colorball[i-1][1] == c:
-            sequence[idx] = balls[i]-color[c] + same
-        else:
-            sequence[idx] = balls[i]-color[c] 
+            sequence[idx] = prefix - colors[c]
+            if same_color:
+                for prev_c, cnt in same_color.items():
+                    colors[prev_c] += same * cnt
+                    prefix += same * cnt
+                same_color.clear()
+            prefix += ball
+            colors[c] += ball
+
+    idx, c, ball = sort_colorballs[-1]
+    sequence[idx] = prefix - colors[c]
+
 
     print(*sequence, sep="\n")
-
     return 
 
 
